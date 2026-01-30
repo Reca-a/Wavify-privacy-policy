@@ -19,13 +19,50 @@
         hr {
             margin: 32px 0;
         }
+        a {
+            color: #0066cc;
+        }
+        .lang-switcher {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .lang-switcher button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin-left: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .lang-switcher button:hover {
+            background-color: #0052a3;
+        }
+        .lang-switcher button.active {
+            background-color: #003d7a;
+        }
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
+<div class="lang-switcher">
+    <button onclick="switchLang('en')" id="btn-en" class="active">English</button>
+    <button onclick="switchLang('pl')" id="btn-pl">Polski</button>
+</div>
+
+<!-- English version -->
+<div id="content-en" class="lang-content active">
+
 <h1>Wavify - Privacy Policy</h1>
     
-<p>Last updated: <strong>2026-01-13</strong></p>
+<p>Last updated: <strong>January 30, 2026</strong></p>
     
 <p>
 This application ("App") is developed as part of an educational project for academic purposes by <strong>Adrian Raczek</strong>.
@@ -41,7 +78,7 @@ The App <strong>does not collect, store, or share any personal data</strong> fro
 </p>
     
 <p>
-The App operates fully offline and does not require user accounts, login, or internet-based data processing.
+The App primarily operates offline but connects to the internet solely to fetch song lyrics upon user request from a third-party API service.
 </p>
     
 <hr>
@@ -57,27 +94,28 @@ This information is not stored, transmitted, or used to identify users.
 <p>
 User preferences and playlists created within the App are stored locally on the device
 using standard Android storage mechanisms (SharedPreferences) and are never transmitted
-outside the device.
+outside the device. This data remains on your device and is deleted when you uninstall the App.
 </p>
     
 <hr>
     
-<h2>3. Third-Party Libraries</h2>
+<h2>3. Third-Party Libraries and Services</h2>
     
 <p>
 The App uses standard Android and open-source libraries, including:
 </p>
 <ul>
-    <li>AndroidX libraries</li>
+    <li>AndroidX libraries (Google/Android Open Source Project)</li>
     <li>Media3 / ExoPlayer (for media playback)</li>
     <li>Coil (for image loading)</li>
-    <li>Material Components</li>
-    <li>CameraX (for camera access)</li>
-    <li>Google ML Kit Vision (for gesture recognition processing)</li>
+    <li>Material Components (Google)</li>
+    <li>CameraX (Google - for camera access)</li>
+    <li><strong>Google ML Kit Vision</strong> (for gesture recognition processing) - This is a Google service that processes camera data locally on your device. ML Kit does not send data to Google servers in this App's implementation. For more information about ML Kit, visit: <a href="https://developers.google.com/ml-kit/terms" target="_blank">ML Kit Terms of Service</a></li>
+    <li><strong>lyrics.ovh API</strong> - The App transmits only the song title and artist name to this public third-party API to retrieve lyrics. No personal user identification data is shared with this service. The App does not control this external service. For their privacy practices, see: <a href="https://lyricsovh.docs.apiary.io/" target="_blank">lyrics.ovh API Documentation</a></li>
 </ul>
     
 <p>
-These libraries do not collect personal data on behalf of the App. All processing occurs locally on your device.
+These libraries do not collect personal data on behalf of the App. Third-party services (lyrics.ovh) are governed by their own privacy policies.
 </p>
     
 <hr>
@@ -89,26 +127,31 @@ The App requires the following permissions to function properly:
 </p>
 <ul>
     <li>
-        <strong>Access to media files (audio)</strong> - used only to allow the App
+        <strong>Access to media files (READ_MEDIA_AUDIO / READ_EXTERNAL_STORAGE)</strong> - used only to allow the App
         to read and play audio files stored locally on the user's device.
-        The App <strong>does not upload, store, or share these files</strong>.
+        The App <strong>does not upload, store externally, or share these files</strong>.
     </li>
     <li>
-        <strong>Notifications</strong> - used to display playback controls while audio
-        is playing in the background.
+        <strong>Notifications (POST_NOTIFICATIONS)</strong> - used to display playback controls while audio
+        is playing in the background. You can disable this in device settings at any time.
     </li>
     <li>
-        <strong>Camera access</strong> - used exclusively for real-time gesture recognition
+        <strong>Camera access (CAMERA)</strong> - used exclusively for real-time gesture recognition
         to control music playback (e.g., switching tracks with hand gestures).
         <strong>No photos or videos are captured, recorded, saved, or transmitted.</strong>
-        Camera data is processed locally on the device in real-time and is immediately discarded
-        after gesture detection. No camera data leaves your device.
+        Camera data is processed locally on the device in real-time using Google ML Kit Vision
+        and is immediately discarded after gesture detection. <strong>No camera data leaves your device.</strong>
+        This feature is optional and can be disabled at any time.
+    </li>
+    <li>
+        <strong>Internet Access (INTERNET)</strong> - used to connect to the external API (lyrics.ovh)
+        to download song lyrics when requested by the user. The connection uses HTTPS encryption.
     </li>
 </ul>
     
 <p>
 All permissions are used solely for core application functionality and can be revoked at any time
-through your device settings.
+through your device settings (Settings → Apps → Wavify → Permissions).
 </p>
     
 <hr>
@@ -116,66 +159,396 @@ through your device settings.
 <h2>5. Camera Usage Details</h2>
     
 <p>
-The camera permission is used only for gesture recognition features:
+The camera permission is used only for the optional gesture recognition feature:
 </p>
 <ul>
-    <li>Camera feed is processed in real-time on your device only</li>
-    <li>No images, videos, or camera data are saved</li>
+    <li>Camera feed is processed in real-time on your device only using Google ML Kit Vision</li>
+    <li>Processing happens entirely on-device; no data is sent to external servers</li>
+    <li>No images, videos, or camera data are saved to storage</li>
     <li>No camera data is transmitted to any server or third party</li>
     <li>Camera usage occurs only when the gesture control feature is actively enabled by the user</li>
     <li>You can disable this feature at any time, and the camera will not be accessed</li>
+    <li>You can revoke camera permission entirely through device settings</li>
 </ul>
     
 <hr>
     
-<h2>6. Data Security</h2>
+<h2>6. Data Transmission to Third Parties</h2>
+
+<p>
+The only data transmitted outside your device is:
+</p>
+<ul>
+    <li><strong>To lyrics.ovh API:</strong> Song title and artist name (when you request lyrics)</li>
+    <li>No personal identification data is sent</li>
+    <li>No user account, email, device ID, or location data is transmitted</li>
+    <li>Connections use HTTPS encryption</li>
+</ul>
+
+<p>
+The App does not integrate any analytics, advertising, or tracking services.
+</p>
+
+<hr>
+    
+<h2>7. Data Security</h2>
     
 <p>
-Since no personal data is collected or stored, there is no risk of personal data leakage.
-The App follows standard Android security practices. All camera processing happens locally
-on your device with no data transmission.
+Since no personal data is collected or stored by the App, there is no risk of personal data leakage
+from the App itself. The App follows standard Android security practices. All camera processing
+happens locally on your device with no data transmission.
+</p>
+
+<p>
+Data stored locally on your device (playlists, preferences) is protected by Android's
+built-in security mechanisms and is isolated from other apps.
 </p>
     
 <hr>
     
-<h2>7. User Rights</h2>
+<h2>8. User Rights</h2>
     
 <p>
-As the App does not collect personal data, there is no personal data to access, modify, or delete.
-Users have full control over app permissions and can revoke camera access at any time through
-device settings.
+As the App does not collect or transmit personal data to the developer, there is no personal
+data to access, modify, or delete from developer-controlled systems.
+</p>
+
+<p>
+Users have full control over:
+</p>
+<ul>
+    <li>All locally stored data (playlists, preferences) - deleted automatically upon app uninstallation</li>
+    <li>All app permissions - can be revoked at any time through device settings</li>
+    <li>Camera access - can be disabled or revoked at any time</li>
+</ul>
+
+<p>
+If you have concerns about data sent to third-party services (lyrics.ovh), please contact
+those services directly as they are governed by their own privacy policies.
 </p>
     
 <hr>
     
-<h2>8. Children's Privacy</h2>
+<h2>9. Children's Privacy</h2>
     
 <p>
-This App does not knowingly collect any information from children under the age of 13.
+This App does not knowingly collect any information from children under the age of 13
+(or the applicable age of digital consent in your jurisdiction).
 The App is designed for general audiences and does not target children specifically.
 </p>
+
+<p>
+The App does not include any features that would appeal specifically to children,
+nor does it collect any data from users of any age.
+</p>
     
 <hr>
     
-<h2>9. Changes to This Privacy Policy</h2>
+<h2>10. Data Retention and Deletion</h2>
+
+<p>
+<strong>Local data:</strong> All user data (playlists, preferences) is stored only on your device
+and is automatically deleted when you uninstall the App.
+</p>
+
+<p>
+<strong>Third-party data:</strong> The App does not store or retain any data about lyrics requests.
+Data sent to lyrics.ovh is governed by their retention policies.
+</p>
+
+<hr>
+
+<h2>11. Changes to This Privacy Policy</h2>
     
 <p>
-This Privacy Policy may be updated if the App functionality changes.
-Any updates will be published on this page with a revised "Last updated" date.
+This Privacy Policy may be updated if the App functionality changes or to comply with
+legal requirements. Any updates will be published on this page with a revised "Last updated" date.
+</p>
+
+<p>
+Continued use of the App after changes constitutes acceptance of the updated Privacy Policy.
+You are encouraged to review this Privacy Policy periodically.
 </p>
     
 <hr>
 
-<h2>8. Contact</h2>
+<h2>12. Contact</h2>
 <p>
-If you have any questions about this Privacy Policy, you can contact me at:
+If you have any questions, concerns, or requests regarding this Privacy Policy or your privacy
+while using the App, you can contact me at:
 </p>
 
 <p>
-<strong>Email:</strong> ar131498@stud.ur.edu.pl
+<strong>Developer:</strong> Adrian Raczek<br>
+<strong>Email:</strong> ar131498@stud.ur.edu.pl<br>
+<strong>Affiliation:</strong> University of Rzeszów, Poland
 </p>
+
+<p>
+For questions about third-party services:
+</p>
+<ul>
+    <li>Google ML Kit: <a href="https://developers.google.com/ml-kit" target="_blank">developers.google.com/ml-kit</a></li>
+    <li>lyrics.ovh API: <a href="https://lyricsovh.docs.apiary.io/" target="_blank">lyricsovh.docs.apiary.io</a></li>
+</ul>
+
+</div>
+
+<!-- Polska wersja -->
+<div id="content-pl" class="lang-content">
+
+<h1>Wavify - Polityka Prywatności</h1>
+    
+<p>Ostatnia aktualizacja: <strong>30 stycznia 2026</strong></p>
+    
+<p>
+Ta aplikacja ("Aplikacja") została stworzona jako część projektu edukacyjnego do celów akademickich przez <strong>Adriana Raczka</strong>.
+Szanuję Twoją prywatność i zobowiązuję się do jej ochrony.
+</p>
+    
+<hr>
+    
+<h2>1. Zbieranie Danych</h2>
+    
+<p>
+Aplikacja <strong>nie zbiera, nie przechowuje ani nie udostępnia żadnych danych osobowych</strong> użytkowników.
+</p>
+    
+<p>
+Aplikacja działa głównie offline, ale łączy się z internetem wyłącznie w celu pobrania tekstów piosenek
+na żądanie użytkownika z zewnętrznego API.
+</p>
+    
+<hr>
+    
+<h2>2. Informacje o Urządzeniu i Aplikacji</h2>
+    
+<p>
+Aplikacja może uzyskiwać dostęp do podstawowych informacji o urządzeniu dostarczanych przez system Android
+(takich jak wersja Androida lub model urządzenia) wyłącznie w celu prawidłowego działania.
+Te informacje nie są przechowywane, przesyłane ani wykorzystywane do identyfikacji użytkowników.
+</p>
+
+<p>
+Preferencje użytkownika i playlisty utworzone w Aplikacji są przechowywane lokalnie na urządzeniu
+przy użyciu standardowych mechanizmów przechowywania Androida (SharedPreferences) i nigdy nie są przesyłane
+poza urządzenie. Te dane pozostają na Twoim urządzeniu i są usuwane po odinstalowaniu Aplikacji.
+</p>
+    
+<hr>
+    
+<h2>3. Biblioteki i Usługi Zewnętrzne</h2>
+    
+<p>
+Aplikacja wykorzystuje standardowe biblioteki Android i open-source, w tym:
+</p>
+<ul>
+    <li>Biblioteki AndroidX (Google/Android Open Source Project)</li>
+    <li>Media3 / ExoPlayer (do odtwarzania muzyki)</li>
+    <li>Coil (do ładowania obrazów)</li>
+    <li>Material Components (Google)</li>
+    <li>CameraX (Google - do dostępu do kamery)</li>
+    <li><strong>Google ML Kit Vision</strong> (do rozpoznawania gestów) - To usługa Google, która przetwarza dane z kamery lokalnie na Twoim urządzeniu. ML Kit nie wysyła danych na serwery Google w implementacji tej Aplikacji. Więcej informacji o ML Kit: <a href="https://developers.google.com/ml-kit/terms" target="_blank">Warunki usługi ML Kit</a></li>
+    <li><strong>API lyrics.ovh</strong> - Aplikacja przesyła tylko tytuł piosenki i nazwę artysty do tego publicznego zewnętrznego API w celu pobrania tekstów. Żadne dane identyfikujące użytkownika nie są udostępniane tej usłudze. Aplikacja nie kontroluje tej zewnętrznej usługi. Informacje o ich praktykach prywatności: <a href="https://lyricsovh.docs.apiary.io/" target="_blank">Dokumentacja API lyrics.ovh</a></li>
+</ul>
+    
+<p>
+Te biblioteki nie zbierają danych osobowych w imieniu Aplikacji. Usługi zewnętrzne (lyrics.ovh) podlegają
+własnym politykom prywatności.
+</p>
+    
+<hr>
+    
+<h2>4. Uprawnienia Aplikacji</h2>
+    
+<p>
+Aplikacja wymaga następujących uprawnień do prawidłowego działania:
+</p>
+<ul>
+    <li>
+        <strong>Dostęp do plików multimedialnych (READ_MEDIA_AUDIO / READ_EXTERNAL_STORAGE)</strong> - używany tylko w celu
+        umożliwienia Aplikacji odczytywania i odtwarzania plików audio przechowywanych lokalnie na urządzeniu użytkownika.
+        Aplikacja <strong>nie przesyła, nie przechowuje zewnętrznie ani nie udostępnia tych plików</strong>.
+    </li>
+    <li>
+        <strong>Powiadomienia (POST_NOTIFICATIONS)</strong> - używane do wyświetlania kontrolek odtwarzania podczas
+        odtwarzania audio w tle. Możesz to wyłączyć w ustawieniach urządzenia w dowolnym momencie.
+    </li>
+    <li>
+        <strong>Dostęp do kamery (CAMERA)</strong> - używany wyłącznie do rozpoznawania gestów w czasie rzeczywistym
+        w celu sterowania odtwarzaniem muzyki (np. przełączanie utworów za pomocą gestów dłoni).
+        <strong>Żadne zdjęcia ani filmy nie są przechwytywane, nagrywane, zapisywane ani przesyłane.</strong>
+        Dane z kamery są przetwarzane lokalnie na urządzeniu w czasie rzeczywistym przy użyciu Google ML Kit Vision
+        i są natychmiast usuwane po wykryciu gestu. <strong>Żadne dane z kamery nie opuszczają Twojego urządzenia.</strong>
+        Ta funkcja jest opcjonalna i można ją wyłączyć w dowolnym momencie.
+    </li>
+    <li>
+        <strong>Dostęp do Internetu (INTERNET)</strong> - używany do połączenia z zewnętrznym API (lyrics.ovh)
+        w celu pobrania tekstów piosenek na żądanie użytkownika. Połączenie wykorzystuje szyfrowanie HTTPS.
+    </li>
+</ul>
+    
+<p>
+Wszystkie uprawnienia są używane wyłącznie do podstawowej funkcjonalności aplikacji i można je cofnąć w dowolnym momencie
+w ustawieniach urządzenia (Ustawienia → Aplikacje → Wavify → Uprawnienia).
+</p>
+    
+<hr>
+    
+<h2>5. Szczegóły Dotyczące Używania Kamery</h2>
+    
+<p>
+Uprawnienie do kamery jest używane tylko dla opcjonalnej funkcji rozpoznawania gestów:
+</p>
+<ul>
+    <li>Obraz z kamery jest przetwarzany w czasie rzeczywistym tylko na Twoim urządzeniu przy użyciu Google ML Kit Vision</li>
+    <li>Przetwarzanie odbywa się całkowicie na urządzeniu; żadne dane nie są wysyłane na zewnętrzne serwery</li>
+    <li>Żadne obrazy, filmy ani dane z kamery nie są zapisywane w pamięci</li>
+    <li>Żadne dane z kamery nie są przesyłane na żaden serwer ani do osób trzecich</li>
+    <li>Kamera jest używana tylko wtedy, gdy funkcja sterowania gestami jest aktywnie włączona przez użytkownika</li>
+    <li>Możesz wyłączyć tę funkcję w dowolnym momencie, a kamera nie będzie używana</li>
+    <li>Możesz całkowicie cofnąć uprawnienie do kamery w ustawieniach urządzenia</li>
+</ul>
+    
+<hr>
+    
+<h2>6. Przekazywanie Danych Osobom Trzecim</h2>
+
+<p>
+Jedyne dane przesyłane poza Twoje urządzenie to:
+</p>
+<ul>
+    <li><strong>Do API lyrics.ovh:</strong> Tytuł piosenki i nazwa artysty (gdy żądasz tekstów)</li>
+    <li>Nie są wysyłane żadne dane identyfikujące osobiście</li>
+    <li>Nie jest przesyłane konto użytkownika, email, ID urządzenia ani dane lokalizacji</li>
+    <li>Połączenia wykorzystują szyfrowanie HTTPS</li>
+</ul>
+
+<p>
+Aplikacja nie integruje żadnych usług analitycznych, reklamowych ani śledzących.
+</p>
+
+<hr>
+    
+<h2>7. Bezpieczeństwo Danych</h2>
+    
+<p>
+Ponieważ Aplikacja nie zbiera ani nie przechowuje danych osobowych, nie ma ryzyka wycieku danych osobowych
+z samej Aplikacji. Aplikacja przestrzega standardowych praktyk bezpieczeństwa Androida. Całe przetwarzanie
+obrazu z kamery odbywa się lokalnie na Twoim urządzeniu bez przesyłania danych.
+</p>
+
+<p>
+Dane przechowywane lokalnie na Twoim urządzeniu (playlisty, preferencje) są chronione przez
+wbudowane mechanizmy bezpieczeństwa Androida i są odizolowane od innych aplikacji.
+</p>
+    
+<hr>
+    
+<h2>8. Prawa Użytkownika</h2>
+    
+<p>
+Ponieważ Aplikacja nie zbiera ani nie przesyła danych osobowych do programisty, nie ma danych osobowych
+do wglądu, modyfikacji lub usunięcia z systemów kontrolowanych przez programistę.
+</p>
+
+<p>
+Użytkownicy mają pełną kontrolę nad:
+</p>
+<ul>
+    <li>Wszystkimi danymi przechowywanymi lokalnie (playlisty, preferencje) - usuwane automatycznie po odinstalowaniu aplikacji</li>
+    <li>Wszystkimi uprawnieniami aplikacji - można je cofnąć w dowolnym momencie w ustawieniach urządzenia</li>
+    <li>Dostępem do kamery - można wyłączyć lub cofnąć w dowolnym momencie</li>
+</ul>
+
+<p>
+Jeśli masz obawy dotyczące danych wysyłanych do usług zewnętrznych (lyrics.ovh), skontaktuj się
+bezpośrednio z tymi usługami, ponieważ podlegają one własnym politykom prywatności.
+</p>
+    
+<hr>
+    
+<h2>9. Prywatność Dzieci</h2>
+    
+<p>
+Ta Aplikacja nie zbiera świadomie żadnych informacji od dzieci poniżej 13 roku życia
+(lub odpowiedniego wieku zgody cyfrowej w Twojej jurysdykcji).
+Aplikacja jest przeznaczona dla ogólnej publiczności i nie jest specjalnie kierowana do dzieci.
+</p>
+
+<p>
+Aplikacja nie zawiera żadnych funkcji, które byłyby szczególnie atrakcyjne dla dzieci,
+ani nie zbiera żadnych danych od użytkowników w żadnym wieku.
+</p>
+    
+<hr>
+    
+<h2>10. Przechowywanie i Usuwanie Danych</h2>
+
+<p>
+<strong>Dane lokalne:</strong> Wszystkie dane użytkownika (playlisty, preferencje) są przechowywane tylko na Twoim urządzeniu
+i są automatycznie usuwane po odinstalowaniu Aplikacji.
+</p>
+
+<p>
+<strong>Dane osób trzecich:</strong> Aplikacja nie przechowuje ani nie zachowuje żadnych danych o żądaniach tekstów.
+Dane wysłane do lyrics.ovh podlegają ich politykom przechowywania.
+</p>
+
+<hr>
+
+<h2>11. Zmiany w Polityce Prywatności</h2>
+    
+<p>
+Ta Polityka Prywatności może zostać zaktualizowana w przypadku zmiany funkcjonalności Aplikacji lub w celu
+spełnienia wymogów prawnych. Wszelkie aktualizacje zostaną opublikowane na tej stronie z zaktualizowaną datą "Ostatnia aktualizacja".
+</p>
+
+<p>
+Kontynuowanie korzystania z Aplikacji po wprowadzeniu zmian oznacza akceptację zaktualizowanej Polityki Prywatności.
+Zachęcam do okresowego przeglądania tej Polityki Prywatności.
+</p>
+    
+<hr>
+
+<h2>12. Kontakt</h2>
+<p>
+Jeśli masz jakiekolwiek pytania, wątpliwości lub prośby dotyczące tej Polityki Prywatności lub Twojej prywatności
+podczas korzystania z Aplikacji, możesz skontaktować się ze mną pod adresem:
+</p>
+
+<p>
+<strong>Programista:</strong> Adrian Raczek<br>
+<strong>Email:</strong> ar131498@stud.ur.edu.pl<br>
+<strong>Afiliacja:</strong> Uniwersytet Rzeszowski, Polska
+</p>
+
+<p>
+W przypadku pytań dotyczących usług zewnętrznych:
+</p>
+<ul>
+    <li>Google ML Kit: <a href="https://developers.google.com/ml-kit" target="_blank">developers.google.com/ml-kit</a></li>
+    <li>API lyrics.ovh: <a href="https://lyricsovh.docs.apiary.io/" target="_blank">lyricsovh.docs.apiary.io</a></li>
+</ul>
+
+</div>
+
+<script>
+function switchLang(lang) {
+    document.querySelectorAll('.lang-content').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.lang-switcher button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    document.getElementById('content-' + lang).classList.add('active');
+    document.getElementById('btn-' + lang).classList.add('active');
+    
+    document.documentElement.lang = lang;
+}
+</script>
 
 </body>
 </html>
-
-
